@@ -61,13 +61,15 @@ namespace OutfitSystem
 
                         // armor in rcx, target in r13
                         push(rcx);
-                        push(rdx);
+                        push(rdx);              
+                        push(r9);
                         push(r8);
                         mov(rdx, r13);
-                        sub(rsp, 0x20);
+                        sub(rsp, 0x40);
                         call(ptr[rip+f_ShouldOverride]);
-                        add(rsp, 0x20);
+                        add(rsp, 0x40);
                         pop(r8);
+                        pop(r9);
                         pop(rdx);
                         pop(rcx);
                         test(al, al);
