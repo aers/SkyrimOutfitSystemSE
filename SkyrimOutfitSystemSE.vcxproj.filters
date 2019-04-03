@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="exports.def" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{57c9eac9-3a96-4dbf-8d19-cdddafb51688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{aee06ac9-1bc5-42ef-858c-7657bb1ee832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\services">
+      <UniqueIdentifier>{1bbb4e27-05b8-4555-a3ae-d3f377f824b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\papyrus">
+      <UniqueIdentifier>{630f2ac1-d0c5-4f51-8254-51eabac6cd63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\cobb">
+      <UniqueIdentifier>{6599c9de-2682-4d8b-acfe-0671511d9bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cobb">
+      <UniqueIdentifier>{749eab2a-a141-4167-9cf5-2d38f1bd6e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\services">
+      <UniqueIdentifier>{e9fdeff1-4f2e-477d-9dd2-2a32865f9993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\papyrus">
+      <UniqueIdentifier>{b3f80412-c585-4353-8001-31cba4b6cac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\hooks">
+      <UniqueIdentifier>{60edd6c6-dee0-415a-bc99-28159d33904c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hooks">
+      <UniqueIdentifier>{7f681548-d64d-4753-93c3-948f57cc28e7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cobb\utf8naturalsort.cpp">
+      <Filter>src\cobb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cobb\utf8string.cpp">
+      <Filter>src\cobb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ArmorAddonOverrideService.cpp">
+      <Filter>src\services</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StorableObject.cpp">
+      <Filter>src\services</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OutfitSystem.cpp">
+      <Filter>src\papyrus</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerSkinning.cpp">
+      <Filter>src\hooks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ArmorAddonOverrideService.h">
+      <Filter>include\services</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StorableObject.h">
+      <Filter>include\services</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cobb\strings.h">
+      <Filter>include\cobb</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cobb\utf8naturalsort.h">
+      <Filter>include\cobb</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cobb\utf8string.h">
+      <Filter>include\cobb</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OutfitSystem.h">
+      <Filter>include\papyrus</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerSkinning.h">
+      <Filter>include\hooks</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="version.rc" />
+  </ItemGroup>
+</Project>
