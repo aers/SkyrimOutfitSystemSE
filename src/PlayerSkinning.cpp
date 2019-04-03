@@ -11,7 +11,6 @@
 #include "skse64/GameRTTI.h"
 #include "RE/EquipManager.h"
 
-
 namespace OutfitSystem
 {
     bool ShouldOverrideSkinning(RE::TESObjectREFR * target)
@@ -331,6 +330,11 @@ namespace OutfitSystem
         }
     }
 
+    // (+0x97) E8 ? ? ? ? 84 C0 74 2D 4C 8B 06 
+    RelocAddr<uintptr_t> FixEquipConflictCheck_Hook(0x0060CAC7);
+    // its the above function
+    RelocAddr<void *> BGSBipedObjectForm_TestBodyPartByIndex(0x001820A0);
+
     namespace FixEquipConflictCheck
     {
         //
@@ -377,7 +381,7 @@ namespace OutfitSystem
             RE::Actor* target;
             UInt32     conflictIndex = 0;
         };
-        void _stdcall Inner(UInt32 bodyPartForNewItem, RE::Actor* target) {
+        void Inner(UInt32 bodyPartForNewItem, RE::Actor* target) {
             auto inventory = target->GetInventoryChanges();
             if (inventory) {
                 _Visitor visitor;
@@ -389,7 +393,7 @@ namespace OutfitSystem
                 _MESSAGE("OverridePlayerSkinning: Conflict check failed: no inventory!");
             }
         }
-        bool _stdcall ShouldOverride(RE::TESForm* item) {
+        bool ShouldOverride(RE::TESForm* item) {
             //
             // We only hijack equipping for armors, so I'd like for this patch to only 
             // apply to armors as well. It shouldn't really matter -- before I added 
@@ -402,7 +406,68 @@ namespace OutfitSystem
         void Apply()
         {
             _MESSAGE("Patching fix for equip conflict check");
+            {
+                struct FixEquipConflictCheck_Code : Xbyak::CodeGenerator
+                {
+                    FixEquipConflictCheck_Code(void* buf) : CodeGenerator(4096, buf)
+                    {
+                        Xbyak::Label j_Out;
+                        Xbyak::Label j_Exit;
+                        Xbyak::Label f_Inner;
+                        Xbyak::Label f_TestBodyPartByIndex;
+                        Xbyak::Label f_ShouldOverride;
 
+                        call(ptr[rip + f_TestBodyPartByIndex]);
+                        test(al, al);
+                        jz(j_Exit);
+
+                        // rsp+0x10: item
+                        // rdi: Actor
+                        // rbx: Body Slot
+                        push(rcx);
+                        mov(rcx, ptr[rsp + 0x18]);
+                        sub(rsp, 0x20);
+                        call(ptr[rip + f_ShouldOverride]);
+                        add(rsp, 0x20);
+                        pop(rcx);
+                        test(al, al);
+                        mov(rax, 1);
+                        jz(j_Out);
+                        push(rcx);
+                        push(rdx);
+                        mov(rcx, rbx);
+                        mov(rdx, rdi);
+                        sub(rsp, 0x20);
+                        call(ptr[rip + f_Inner]);
+                        add(rsp, 0x20);
+                        pop(rdx);
+                        pop(rcx);
+
+                        L(j_Exit);
+                        xor(al, al);
+
+                        L(j_Out);
+                        jmp(ptr[rip]);
+                        dq(FixEquipConflictCheck_Hook.GetUIntPtr() + 0x5);
+
+                        L(f_TestBodyPartByIndex);
+                        dq(BGSBipedObjectForm_TestBodyPartByIndex.GetUIntPtr());
+
+                        L(f_ShouldOverride);
+                        dq(uintptr_t(ShouldOverride));
+
+                        L(f_Inner);
+                        dq(uintptr_t(Inner));
+                    }
+                };
+
+                void* codeBuf = g_localTrampoline.StartAlloc();
+                FixEquipConflictCheck_Code code(codeBuf);
+                g_localTrampoline.EndAlloc(code.getCurr());
+
+                g_branchTrampoline.Write5Branch(FixEquipConflictCheck_Hook.GetUIntPtr(),
+                                                uintptr_t(code.getCode()));
+            }
             _MESSAGE("Done");
         }
     }
